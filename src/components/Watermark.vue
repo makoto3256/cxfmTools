@@ -13,7 +13,7 @@ export default {
 
     
     const watermarks = ref([
-      'LunarCoreWebTools', 
+      'cxfmTools', 
       
     ])
 

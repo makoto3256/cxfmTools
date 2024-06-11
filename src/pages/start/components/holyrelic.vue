@@ -94,7 +94,7 @@ const value = computed(() => {
   // 如果 xct 为空，则使用默认值 1
   xct = xct || ' 1';
 
-  return `/give ${holyrelicnamevalue.value} lv${grade.value} s${modifiedValue}${xct} `
+  return `/relic ${holyrelicnamevalue.value} lv${grade.value} s${modifiedValue}${xct} `
 })
 const execute = () => {
   const address = localStorage.getItem('address')
@@ -104,7 +104,7 @@ const execute = () => {
   if (!address || !uid || !adminpass) {
     message.info('用户未登录，请重试')
   } else {
-    const command = `give ${holyrelicnamevalue.value} lv${grade.value} s${modifiedValue}${xct} `
+    const command = `relic ${holyrelicnamevalue.value} lv${grade.value} s${modifiedValue}${xct} `
     const data = { uid, adminpass, command }
 
     axios.post(address, qs.stringify(data), {
