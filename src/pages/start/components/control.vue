@@ -80,12 +80,12 @@ const handleSubmit = async () => {
     console.log(res);
     responseData.value = JSON.stringify(res.data, null, 2);
 
-    // 检查返回的数据格式
+    
     if (res.data && res.data.retcode !== undefined) {
       if (res.data.retcode === 0) {
         localStorage.setItem('address', form.ssl + form.ip + form.path);
         localStorage.setItem('uid', form.uid);
-        localStorage.setItem('adminpass', form.password); // 存储时使用adminpass
+        localStorage.setItem('adminpass', form.password); 
         showMessage.value = true;
         messageType.value = 'success';
         message.value = '数据保存成功！';

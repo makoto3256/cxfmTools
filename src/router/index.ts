@@ -16,6 +16,14 @@ let constantRoutes = [
         component: () => import('@/pages/start/components/commuse.vue'),
       },
       {
+        path: "/start/player",
+        component: () => import('@/pages/start/components/player.vue'),
+      },
+      {
+        path: "/start/note",
+        component: () => import('@/pages/start/components/note.vue'),
+      },
+      {
         path: "/start/suggest",
         component: () => import('@/pages/start/components/suggest.vue'),
       },

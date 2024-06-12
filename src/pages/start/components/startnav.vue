@@ -1,20 +1,32 @@
 <template>
   <div class="nav">
-    <a-menu  class="menu" :default-collapsed="isMobile" showCollapseButton :default-open-keys="['0', '1', '2']" :selected-keys="selectedKey">
+    <a-menu class="menu" :default-collapsed="isMobile" showCollapseButton :default-open-keys="['0', '1', '2', '3']" :selected-keys="selectedKey">
       <a-sub-menu key="0">
         <template #icon>
           <IconApps></IconApps>
         </template>
         <template #title>{{ t('menu.main') }}</template>
         <a-menu-item v-for="(item, index) in datav" :key="item.path" @click="topath(item.path)">
-          
           {{ t(`menu.${item.name.toLowerCase()}`) }}
         </a-menu-item>
+      </a-sub-menu>
+      <!-- 新增的“大类：其他” -->
+      <a-sub-menu key="3">
+        <template #icon>
+          <IconBug></IconBug>
+        </template>
+        <template #title>其他</template>
+        <a-menu-item key="/start/note" @click="topath('/start/note')">
+          发病文学生成器
+        </a-menu-item>
+        <a-menu-item key="/start/player" @click="topath('/start/player')">
+          玩家信息
+  </a-menu-item>
+
       </a-sub-menu>
     </a-menu>
   </div>
 </template>
-
 <script setup lang="ts">
 import { reactive, ref, onMounted, watch } from 'vue'
 import { IconApps, IconBug } from '@arco-design/web-vue/es/icon';
@@ -37,10 +49,9 @@ const datav = reactive([
   { name: 'food', path: "/start/food" },
   { name: 'avatar', path: "/start/page1" },
   { name: 'scene', path: "/start/scene" },
-  { name: 'RemoteControl', path: "/start/control" }, // Modified key to match your translation
+  { name: 'RemoteControl', path: "/start/control" },
   { name: 'about', path: "/start/about" },
   { name: 'suggest', path: "/start/suggest" },
-
 ])
 
 function topath(path: string) {
@@ -54,10 +65,7 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth <= 768
 }
 
-// Call it initially to set the correct value on component mount
 checkMobile()
-
-// Listen for window resize events and update isMobile accordingly
 window.addEventListener('resize', checkMobile)
 
 onMounted(() => {
@@ -72,12 +80,10 @@ watch(
   { immediate: true }
 )
 
-// Set initial language based on browser language
 onMounted(() => {
   locale.value = navigator.language.includes('zh') ? 'zh' : 'en'
 })
 </script>
-
 <style lang="less" scoped>
 .nav {
   height: calc(100vh - 57px);
@@ -86,9 +92,8 @@ onMounted(() => {
     height: 100%;
 
     .ant-menu-submenu {
-      transition: height 0.3s; // Add a transition effect to smooth out the collapse/expand
+      transition: height 0.3s;
     }
   }
 }
 </style>
-

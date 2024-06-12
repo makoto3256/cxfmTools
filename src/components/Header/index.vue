@@ -6,24 +6,34 @@
     >
       <template #extra>
         <div class="extra-container">
-          <!-- 在线人数显示 -->
-          <span class="online-users">在线人数:{{ onlineUsers }}</span>
           
-          <!-- GitHub 图标链接 -->
+          <!-- <span class="online-users">在线人数:{{ onlineUsers }}</span>-->
+          
+          
+          <span class="latency">{{ latency }} ms</span>
+
+          
           <a href="https://github.com/lctoolsweb/LunarCoreTools/" target="_blank" rel="noopener noreferrer" class="github-link">
-            <SvgIcon name="svg-github" size="small" color="#999999"></SvgIcon>
+            <img src="@/components/icon/BiGithub.svg" alt="GitHub Icon" :class="{ 'dark-icon': theme === 'dark' }" class="icon" />
           </a>
           
-          <!-- 主题切换按钮组 -->
-          <a-radio-group type="button" default-value="light" @change="toggleTheme">
-            <a-radio value="light">Light</a-radio>
-            <a-radio value="dark">Dark</a-radio>
-          </a-radio-group>
+          
+          <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=J54m8XB3Ig8VJ41ICO8KW029aSz4fFB-&authKey=tq9%2BSsg2M30Jy1v9OwJEa%2B%2FmarnH2AslQYQsv24BkkeqY39%2FtlpZsrIkqO01SScg&noverify=0&group_code=124750952" target="_blank" rel="noopener noreferrer" class="qq-link">
+            <img src="@/components/icon/BiTencentQq.svg" alt="Tencent QQ Icon" :class="{ 'dark-icon': theme === 'dark' }" class="icon" />
+          </a>
+          
+          
+          <button @click="toggleTheme" class="theme-toggle">
+            <img v-if="theme === 'light'" src="@/components/icon/IonMdMoon.svg" :class="{ 'dark-icon': theme === 'dark' }" alt="Moon Icon" class="icon" />
+            <img v-else src="@/components/icon/IonMdSunny.svg" :class="{ 'dark-icon': theme === 'dark' }" alt="Sunny Icon" class="icon" />
+          </button>
         </div>
       </template>
     </a-page-header>
   </div>
 </template>
+
+
 
 <script>
 import axios from 'axios'; // 导入 Axios 库
@@ -32,17 +42,24 @@ export default {
   data() {
     return {
       theme: 'light',
-      onlineUsers: 0 // 初始化在线人数为 0
+      onlineUsers: 0, // 初始化在线人数为 0
+      latency: 0, // 初始化延迟为 0
+      initialFetch: true // 标志是否是第一次获取延迟值
     };
   },
   mounted() {
-    // 在组件加载完成后获取在线人数
+    // 在组件加载完成后获取在线人数和延迟
     this.fetchOnlineUsers();
+    this.fetchLatency();
+    setTimeout(() => {
+      this.fetchLatency();
+      setInterval(this.fetchLatency, 10000); // 每10秒钟获取一次延迟
+    }, 1000); // 第一次获取之后的1秒获取第二次
   },
   methods: {
-    toggleTheme(theme) {
-      this.theme = theme;
-      if (theme === 'dark') {
+    toggleTheme() {
+      this.theme = this.theme === 'light' ? 'dark' : 'light';
+      if (this.theme === 'dark') {
         document.body.setAttribute('arco-theme', 'dark');
       } else {
         document.body.removeAttribute('arco-theme');
@@ -58,9 +75,22 @@ export default {
         .catch(error => {
           console.error('Error fetching online users:', error);
         });
+    },
+    fetchLatency() {
+      const start = Date.now();
+      axios.get('http://61.136.162.144:9999/api/status') // 发送一个请求到服务器
+        .then(() => {
+          const end = Date.now();
+          const latency = end - start; // 计算延迟时间
+          this.latency = latency; // 更新延迟
+        })
+        .catch(error => {
+          console.error('Error fetching latency:', error);
+        });
     }
   }
 };
+
 </script>
 
 <style>
@@ -76,12 +106,27 @@ export default {
   display: flex;
   align-items: center; 
 }
-.github-link {
+.github-link,
+.qq-link {
   text-decoration: none;
   color: inherit;
 }
-.online-users {
+.online-users,
+.latency {
   margin-right: 10px;
   font-weight: bold;
 }
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+}
+.dark-icon {
+  filter: invert(1);
+}
+
 </style>
